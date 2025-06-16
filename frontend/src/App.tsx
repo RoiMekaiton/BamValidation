@@ -27,12 +27,27 @@ const App: React.FC = () => {
     };
   }, []);
 
+
+  const normalized = message.toLowerCase();
+
   const backgroundColor =
-    message.toLowerCase() === "green"
+    normalized === "green"
       ? "green"
-      : message.toLowerCase() === "red"
+      : normalized === "red"
       ? "red"
       : "white";
+  
+  const messageToScreen = normalized === "green"
+      ? "מי שמוציא מילה מהפה אני שובר אותו"
+      : normalized === "red"
+      ? "אחשלי היקר אתה חופשי לדבר ללא חשש" : "שמישהו יגיד כבר ירוק או אדום";
+
+  const imageSrc =
+    normalized === "green"
+      ? "/green.jpeg"
+      : normalized === "red"
+      ? "/red.jpeg"
+      : undefined;
 
   return (
     <div
@@ -40,13 +55,21 @@ const App: React.FC = () => {
         height: "100vh",
         backgroundColor,
         display: "flex",
-        justifyContent: "center",
+        flexDirection: "column",
         alignItems: "center",
+        justifyContent: "center",
         color: "white",
-        fontSize: "2rem",
+        fontSize: "4rem",
       }}
     >
-      Message from backend: {message}
+      {imageSrc && (
+        <img
+          src={imageSrc}
+          alt={normalized}
+          style={{ width: "400px", marginBottom: "20px" }}
+        />
+      )}
+      {messageToScreen}
     </div>
   );
 };
