@@ -1,12 +1,18 @@
 import asyncio
 import websockets
+import speech_recognition as sr
+
+r = sr.Recognizer()
 
 async def handler(websocket):
-    while True:
-        await websocket.send("green")
-        await asyncio.sleep(5)
-        await websocket.send("red")
-        await asyncio.sleep(5)
+    with sr.Microphone() as source:
+        while True:
+            audio_text = r.listen(source)
+            text = r.recognize_google(audio_text, language="he-ISR")
+            if str(text).split().__contains__("ירוק"):
+                await websocket.send("green")
+            elif str(text).split().__contains__("אדום"):
+                await websocket.send("red")
 
 async def main():
     async with websockets.serve(handler, "localhost", 5000):
