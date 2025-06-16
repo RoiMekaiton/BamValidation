@@ -1,32 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useWebSocket } from "./useWebSocket"; // make sure the path is correct
 
 const App: React.FC = () => {
   const [message, setMessage] = useState<string>("");
 
-  useEffect(() => {
-    const socket = new WebSocket("ws://localhost:5000");
-
-    socket.onmessage = (event: MessageEvent) => {
-      setMessage(event.data);
-    };
-
-    socket.onopen = () => {
-      console.log("WebSocket connected");
-    };
-
-    socket.onclose = () => {
-      console.log("WebSocket closed");
-    };
-
-    socket.onerror = (error: Event) => {
-      console.error("WebSocket error:", error);
-    };
-
-    return () => {
-      socket.close();
-    };
-  }, []);
-
+  useWebSocket("ws://localhost:5000", setMessage);
 
   const normalized = message.toLowerCase();
 
