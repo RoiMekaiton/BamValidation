@@ -1,11 +1,16 @@
-import socket
+import asyncio
+import websockets
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(('127.0.0.1', 5000))
+async def handler(websocket):
+    while True:
+        await websocket.send("green")
+        await asyncio.sleep(5)
+        await websocket.send("red")
+        await asyncio.sleep(5)
 
-server.listen(1)
+async def main():
+    async with websockets.serve(handler, "localhost", 5000):
+        print("WebSocket server started at ws://localhost:5000")
+        await asyncio.Future()  # run forever
 
-while True:
-    client, addr = server.accept()
-    print(client.recv(1024).decode())
-    client.send('Hello from server'.encode())
+asyncio.run(main())
