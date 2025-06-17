@@ -7,15 +7,21 @@ r = sr.Recognizer()
 async def handler(websocket):
     with sr.Microphone() as source:
         while True:
+            print("Listening...")
             audio_text = r.listen(source)
-            text = r.recognize_google(audio_text, language="he-ISR")
-            if str(text).split().__contains__("ירוק"):
-                await websocket.send("green")
-            elif str(text).split().__contains__("אדום"):
-                await websocket.send("red")
+            print("Recognizing...")
+            try:
+                text = r.recognize_google(audio_text, language="he-ISR")
+                print(f"Recognized: {text}")
+                if "ירוק" in text:
+                    await websocket.send("green")
+                elif "אדום" in text:
+                    await websocket.send("red")
+            except Exception as e:
+                print(f"Recognition error: {e}")
 
 async def main():
-    async with websockets.serve(handler, "localhost", 5000):
+    async with websockets.serve(handler, "0.0.0.0", 5000):
         print("WebSocket server started at ws://localhost:5000")
         await asyncio.Future()  # run forever
 
