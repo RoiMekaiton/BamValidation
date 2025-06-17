@@ -3,7 +3,7 @@ version: "3.8"
 services:
   backend:
     build:
-      context: ./backend
+      context: ../backend
     privileged: true
     ports:
       - "5000:5000"
@@ -21,7 +21,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ../frontend
     privileged: true
     ports:
       - "3000:80"
